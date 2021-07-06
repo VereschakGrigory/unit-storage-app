@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+
+    depends_on:
+      - mongo
+
+  unit-storage-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - "UnitStorageDatabaseSettings:ConnectionString=mongodb://mongo:27017"
+    depends_on:
+      - mongo
+    ports:
+      - 5000:80
+    
